@@ -1,0 +1,13 @@
+﻿# 只保留国内（中国大陆）频道。
+# 一行一个 URL，# 开头为注释。顺序即优先级：越靠前越先被采用。
+
+# iptv-org 中国区：由仓库自带 update.yml 每天重建
+https://iptv-org.github.io/iptv/countries/cn.m3u
+
+# ---- 下面这些需要时再打开 ----
+# 全球免费台（2000+ 条，绝大多数不是中文台，会把列表撑大）
+# https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8
+# 华语频道（含港澳台及海外华语台）
+# https://iptv-org.github.io/iptv/languages/zho.m3u
+# 你自己的运营商 IPTV 源（最稳，优先放最上面）
+# https://example.com/my-operator.m3u

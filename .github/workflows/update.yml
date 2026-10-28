@@ -1,0 +1,49 @@
+name: update-playlist
+
+# 每天两次合并上游清单；也可以在仓库的 Actions 页面手动触发。
+# 注意：定时任务在仓库连续 60 天没有提交后会被 GitHub 自动停用——
+# 这个 workflow 本身会提交 out/playlist.m3u，所以只要上游有变化就不会停。
+on:
+  schedule:
+    - cron: "17 3,15 * * *"   # UTC 03:17 / 15:17（北京时间 11:17 / 23:17）
+  workflow_dispatch:          # 手动跑一次
+  push:
+    branches: [main]
+    paths: ["sources.txt", "scripts/**"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-playlist
+  cancel-in-progress: true
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Merge upstream playlists
+        run: python scripts/merge.py --probe --timeout 4
+
+      - name: Show result
+        run: |
+          echo "channels: $(grep -c '^#EXTINF' out/playlist.m3u || true)"
+          du -h out/playlist.m3u
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add out/playlist.m3u
+          if git diff --staged --quiet; then
+            echo "no change"
+          else
+            git commit -m "playlist: $(date -u +%Y-%m-%dT%H:%MZ) $(grep -c '^#EXTINF' out/playlist.m3u || true) channels"
+            git push
+          fi
