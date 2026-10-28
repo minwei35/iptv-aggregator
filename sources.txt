@@ -1,5 +1,8 @@
 ﻿# 只保留国内（中国大陆）频道。
 # 一行一个 URL，# 开头为注释。顺序即优先级：越靠前越先被采用。
+#
+# 注意：不要在 GitHub Actions 里开 --probe。runner 在美国，只在国内能连的频道
+# 会被全部判死（实测 148 条里约 79 条在境外连不上）。探活请在本机跑。
 
 # iptv-org 中国区：由仓库自带 update.yml 每天重建
 https://iptv-org.github.io/iptv/countries/cn.m3u

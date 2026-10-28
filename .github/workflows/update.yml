@@ -9,7 +9,7 @@ on:
   workflow_dispatch:          # 手动跑一次
   push:
     branches: [main]
-    paths: ["sources.txt", "scripts/**"]
+    paths: ["sources.txt", "scripts/**", ".github/workflows/**"]
 
 permissions:
   contents: write
@@ -29,7 +29,10 @@ jobs:
           python-version: "3.12"
 
       - name: Merge upstream playlists
-        run: python scripts/merge.py --probe --timeout 4
+        # 默认不加 --probe：GitHub 的 runner 在美国，探活会把「只在国內能连」的频道
+        # 全部判死（实测 148 条里 79 条在境外连不上）。死链交给播放器自己跳过。
+        # 想探活就在自己电脑上跑：python scripts/merge.py --probe
+        run: python scripts/merge.py
 
       - name: Show result
         run: |
