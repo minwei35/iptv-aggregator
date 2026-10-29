@@ -116,6 +116,93 @@ NOISE = re.compile(
 )
 QUALITY = re.compile(r"\b(hd|fhd|uhd|sd|4k|8k)\b", re.IGNORECASE)
 
+# ---------------------------------------------------------------- 排序（国内 → 国外）
+#
+# 顺序按「用户翻台的直觉」排，而不是按上游的字母序：
+#   0 央视（CCTV 按数字排）→ 1 省级卫视 → 2 其它国内台 → 3 港澳台 → 4 境外
+# 依据是 iptv-org 给每个台带的 tvg-id，形如 CCTV1.cn@SD / PhoenixChinese.hk@SD，
+# 点后面两位就是国家/地区码；没有 tvg-id 的按「来自中文源」处理，归国内。
+_TVG_ID = re.compile(r'tvg-id="([^"]*)"')
+_CCTV_NO = re.compile(r"^CCTV\s*-?\s*(\d+)", re.IGNORECASE)
+_CCTV_PLUS = re.compile(r"^CCTV\+", re.IGNORECASE)
+_CGTN = re.compile(r"^CGTN\b", re.IGNORECASE)
+# 港澳台：tvg-id 国家码之外再用名字兜底（有些台 tvg-id 缺国家码）
+_HMT_NAMES = (
+    "凤凰", "无线", "TVB", "翡翠", "明珠", "东森", "中天", "民视", "台视", "华视",
+    "中视", "公视", "三立", "年代", "非凡", "ViuTV", "HOY", "澳门", "澳视", "莲花",
+    "香港", "台湾", "寰宇", "靖天", "龙华",
+)
+# 省级台：上游大多是英文名（Hunan TV / Jiangsu Satellite TV），靠省名关键词认，
+# 再用 _SUB_CHANNEL 把「省台的细分频道」排除出去，它们算「其它国内台」。
+_PROVINCE_WORDS = (
+    "BEIJING", "TIANJIN", "HEBEI", "SHANXI", "NEI MONGOL", "INNER MONGOLIA",
+    "LIAONING", "JILIN", "HEILONGJIANG", "SHANGHAI", "JIANGSU", "ZHEJIANG",
+    "ANHUI", "FUJIAN", "JIANGXI", "SHANDONG", "HENAN", "HUBEI", "HUNAN",
+    "GUANGDONG", "GUANGXI", "HAINAN", "CHONGQING", "SICHUAN", "GUIZHOU",
+    "YUNNAN", "XIZANG", "TIBET", "SHAANXI", "GANSU", "QINGHAI", "NINGXIA",
+    "XINJIANG", "SHENZHEN", "XIAMEN", "DRAGON TV",
+)
+_SUB_CHANNEL = (
+    "CITY", "NEWS", "MOVIE", "VARIETY", "CHILDREN", "SPORTS", "PUBLIC",
+    "ECONOMY", "LIFE", "EDUCATIONAL", "EDUCATION", "SCIENCE", "WOMEN",
+    "AGRICULTURAL", "QILU", "TRAVEL", "CARTOON", "DRAMA", "DOCUMENTARY",
+    "METRO", "TOURISM", "BUSINESS", "FINANCE", "ENTERTAINMENT", "SERIES",
+    "THEATER", "FILM", "MUSIC", "LEGAL", "POLITICS", "STOCK", "COOKING",
+    "FASHION", "GOLF",
+)
+
+
+def country_code(extinf: str) -> str:
+    """从 tvg-id 里取国家/地区码（小写）；取不到返回空串。"""
+    m = _TVG_ID.search(extinf)
+    if not m:
+        return ""
+    core = m.group(1).split("@", 1)[0]
+    return core.rsplit(".", 1)[1].lower() if "." in core else ""
+
+
+def sort_key(item: tuple[str, str], index: int) -> tuple:
+    """(大区, 组内主键, 组内次键, 原始序号) —— 稳定排序，同区之内保持上游顺序。"""
+    extinf, _url = item
+    name = channel_name(extinf)
+    cc = country_code(extinf)
+    up = name.upper()
+
+    # 0 央视：CCTV 数字台按台号，CCTV+/CGTN 排后面，CCTV 付费频道（台球/风云剧场…）再后面
+    if up.startswith("CCTV"):
+        if _CCTV_PLUS.match(name):
+            return (0, 50, 0, index)
+        m = _CCTV_NO.match(name)
+        if m:
+            return (0, int(m.group(1)), 1 if "+" in name[:9] else 0, index)
+        return (0, 40, 0, index)
+    if _CGTN.match(name):
+        return (0, 60, 0, index)
+
+    # 1 省级卫视 / 省台主频道（国家码必须是 cn 或没标：广东卫视美洲版、天使卫视这类别算进来）
+    if cc in ("", "cn"):
+        if "卫视" in name or "SATELLITE" in up:
+            return (1, 0, 0, index)
+        if any(w in up for w in _PROVINCE_WORDS) and not any(w in up for w in _SUB_CHANNEL):
+            return (1, 0, 0, index)
+
+    # 3 港澳台
+    if cc in ("hk", "tw", "mo") or any(k in name for k in _HMT_NAMES):
+        return (3, 0, 0, index)
+
+    # 2 其它国内台（含没标国家码的，来源本身就是中文清单）
+    if cc in ("", "cn"):
+        return (2, 0, 0, index)
+    return (4, 0, 0, index)
+
+
+def sort_items(items: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    """按「国内 → 港澳台 → 境外」重排，组内尽量保持上游顺序（央视按台号）。"""
+    decorated = [(sort_key(it, i), i, it) for i, it in enumerate(items)]
+    decorated.sort(key=lambda t: (t[0], t[1]))
+    return [t[2] for t in decorated]
+
+
 
 def read_sources(path: Path) -> list[str]:
     if not path.exists():
@@ -191,6 +278,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--probe", action="store_true", help="探活，剔除连不上的源")
     ap.add_argument("--timeout", type=int, default=5, help="探活超时秒数（默认 5）")
+    ap.add_argument("--no-sort", action="store_true", help="保持上游顺序，不做「国内 → 国外」排序")
     ap.add_argument("--sources", type=Path, default=SOURCES)
     ap.add_argument("--out", type=Path, default=OUT)
     args = ap.parse_args()
@@ -233,13 +321,28 @@ def main() -> int:
         print(f"[probe] {len(items)} → {len(alive)}")
         items = alive
 
+    # 先把台名本地化，再排序：省级卫视是靠中文「卫视」二字认出来的，
+    # 排完再翻译的话它们会全部落进「其它国内台」。
+    items = [(localize(extinf), url) for extinf, url in items]
+    if args.no_sort:
+        print("[sort] skipped (--no-sort)")
+    else:
+        items = sort_items(items)
+        counts = {}
+        for it in items:
+            zone = sort_key(it, 0)[0]
+            counts[zone] = counts.get(zone, 0) + 1
+        print("[sort] 央视 %d / 省级卫视 %d / 其它国内 %d / 港澳台 %d / 境外 %d"
+              % (counts.get(0, 0), counts.get(1, 0), counts.get(2, 0),
+                 counts.get(3, 0), counts.get(4, 0)))
+
     args.out.parent.mkdir(parents=True, exist_ok=True)
     lines = ["#EXTM3U"]
     lines.append("# merged by scripts/merge.py — do not edit by hand")
     for src in per_source:
         lines.append(f"#   source: {src}")
     for extinf, url in items:
-        lines.append(localize(extinf))
+        lines.append(extinf)
         lines.append(url)
     args.out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"wrote {args.out} with {len(items)} channels")
