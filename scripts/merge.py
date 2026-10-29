@@ -23,6 +23,90 @@ SOURCES = ROOT / "sources.txt"
 OUT = ROOT / "out" / "playlist.m3u"
 UA = "iptv-aggregator/1.0 (+https://github.com/)"
 
+# 英文台名 → 中文台名。只翻译「确定能对上」的，查不到的原样保留，
+# 免得把不认识的台改成错名字。键是大写、去掉画质/标记后的核心名。
+NAME_ZH = {
+    # 央视
+    "CCTV-1": "CCTV-1 综合",
+    "CCTV-2": "CCTV-2 财经",
+    "CCTV-3": "CCTV-3 综艺",
+    "CCTV-4": "CCTV-4 中文国际",
+    "CCTV-5": "CCTV-5 体育",
+    "CCTV-5+": "CCTV-5+ 体育赛事",
+    "CCTV-6": "CCTV-6 电影",
+    "CCTV-7": "CCTV-7 国防军事",
+    "CCTV-8": "CCTV-8 电视剧",
+    "CCTV-9": "CCTV-9 纪录",
+    "CCTV-10": "CCTV-10 科教",
+    "CCTV-11": "CCTV-11 戏曲",
+    "CCTV-12": "CCTV-12 社会与法",
+    "CCTV-13": "CCTV-13 新闻",
+    "CCTV-14": "CCTV-14 少儿",
+    "CCTV-15": "CCTV-15 音乐",
+    "CCTV-16": "CCTV-16 奥林匹克",
+    "CCTV-17": "CCTV-17 农业农村",
+    "CCTV-4K": "CCTV-4K 超高清",
+    "CCTV+ 1": "CCTV+ 国际 1",
+    "CCTV+ 2": "CCTV+ 国际 2",
+    "CCTV-BILLIARDS": "CCTV 台球",
+    "CCTV-HEALTH": "CCTV 卫生健康",
+    "CCTV-GOLF & TENNIS": "CCTV 高尔夫网球",
+    "CCTV-WEAPON & TECHNOLOGY": "CCTV 兵器科技",
+    "CCTV-WOMEN'S FASHION": "CCTV 女性时尚",
+    "CCTV-WORLD GEOGRAPHY": "CCTV 世界地理",
+    "CCTV-CULTURE OF QUALITY": "CCTV 品质",
+    "CCTV-NOSTALGIA THEATER": "CCTV 怀旧剧场",
+    "CCTV-THE FIRST THEATER": "CCTV 第一剧场",
+    "CCTV-STORM FOOTBALL": "CCTV 风云足球",
+    "CCTV-STORM MUSIC": "CCTV 风云音乐",
+    "CCTV-STORM THEATER": "CCTV 风云剧场",
+    # 省级卫视 / 教育台 / 少儿
+    "BEIJING SATELLITE TV": "北京卫视",
+    "ANHUI TV": "安徽卫视",
+    "BINGTUAN SATELLITE TV": "兵团卫视",
+    "CETV-1": "中国教育 1 套",
+    "CETV-2": "中国教育 2 套",
+    "BRTV KAKU CHILDRENS CHANNEL": "卡酷少儿",
+    "ZHEJIANG INTERNATIONAL CHANNEL": "浙江国际",
+    "KANGBA TV": "康巴卫视",
+    "NANCHANG NEWS & GENERALIST CHANNEL": "南昌新闻综合",
+    "LANZHOU COMPREHENSIVE NEWS CHANNEL": "兰州新闻综合",
+    "LANZHOU CULTURE & TOURISM CHANNEL": "兰州文旅",
+    "SIPING TV": "四平电视台",
+    "JILIN CITY CHANNEL": "吉林市频道",
+    "JILIN LIFESTYLE CHANNEL": "吉林生活",
+    "JILIN MOVIE CHANNEL": "吉林影视",
+    "JILIN RURAL CHANNEL": "吉林乡村",
+    "JIANGXI PUBLIC & AGRICULTURE CHANNEL": "江西公共农业",
+    "ANSHUN COMPREHENSIVE NEWS CHANNEL": "安顺新闻综合",
+    "CHAOZHOU PUBLIC CHANNEL": "潮州公共",
+    "BAICHENG TV": "白城电视台",
+    "ABN CHINA": "ABN 中国",
+    "ANDO TV": "安多卫视",
+    "ANGEL TV CHINESE": "天使卫视",
+}
+
+_MARK = re.compile(r"[\(\[](?:[^\)\]]*)[\)\]]")
+_HD = re.compile(r"^(.*?)\s+(HD|SD|UHD|4K)$", re.IGNORECASE)
+
+
+def localize(extinf: str) -> str:
+    """把 #EXTINF 尾部的英文台名换成中文，查不到就原样返回。"""
+    head, sep, name = extinf.rpartition(",")
+    if not sep:
+        return extinf
+    markers = _MARK.findall(name)
+    core = _MARK.sub("", name).strip()
+    hd = ""
+    m = _HD.match(core)
+    if m:
+        core, hd = m.group(1).strip(), " " + m.group(2).upper()
+    zh = NAME_ZH.get(core.upper())
+    if not zh:
+        return extinf
+    tail = (" " + " ".join(markers)) if markers else ""
+    return f"{head},{zh}{hd}{tail}"
+
 # 频道名里用来做去重键的噪声：画质/线路标记、括号注释
 NOISE = re.compile(
     r"(\[(?:hd|fhd|uhd|sd|4k|8k|hevc|h\.?26[45]|多线路|备用|backup)\])"
@@ -154,7 +238,7 @@ def main() -> int:
     for src in per_source:
         lines.append(f"#   source: {src}")
     for extinf, url in items:
-        lines.append(extinf)
+        lines.append(localize(extinf))
         lines.append(url)
     args.out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"wrote {args.out} with {len(items)} channels")
