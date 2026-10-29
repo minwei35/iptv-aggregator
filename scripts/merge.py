@@ -196,11 +196,28 @@ def sort_key(item: tuple[str, str], index: int) -> tuple:
     return (4, 0, 0, index)
 
 
-def sort_items(items: list[tuple[str, str]]) -> list[tuple[str, str]]:
-    """按「国内 → 港澳台 → 境外」重排，组内尽量保持上游顺序（央视按台号）。"""
+def sort_items(items: list[tuple[str, str]]) -> list[tuple[int, str, str]]:
+    """返回 [(zone, EXTINF, URL)]，已按「国内 → 港澳台 → 境外」排好。"""
     decorated = [(sort_key(it, i), i, it) for i, it in enumerate(items)]
     decorated.sort(key=lambda t: (t[0], t[1]))
-    return [t[2] for t in decorated]
+    return [(t[0][0], t[2][0], t[2][1]) for t in decorated]
+
+
+# 「我的电视」是按 group-title 分组后**摊平**出翻台顺序的（M3uIptvParser: groupBy 保留首次出现顺序），
+# 所以只排文件顺序没用 —— 组本身也要按这个次序出现，否则第一个出现的组会把它的台全挤到前面。
+# 于是把 group-title 重写成 5 个区，组序天然就是国内 → 境外；顺带还能在「频道分组管理」里整组隐藏。
+GROUP_NAMES = {0: "央视频道", 1: "省级卫视", 2: "地方频道", 3: "港澳台", 4: "境外频道"}
+_GROUP_ATTR = re.compile(r'group-title="[^"]*"')
+
+
+def set_group(extinf: str, group: str) -> str:
+    """把 EXTINF 的 group-title 改成分区名（没有这个属性就补上）。"""
+    if _GROUP_ATTR.search(extinf):
+        return _GROUP_ATTR.sub(f'group-title="{group}"', extinf, count=1)
+    head, sep, name = extinf.rpartition(",")
+    if not sep:
+        return extinf
+    return f'{head} group-title="{group}",{name}'
 
 
 
@@ -326,11 +343,11 @@ def main() -> int:
     items = [(localize(extinf), url) for extinf, url in items]
     if args.no_sort:
         print("[sort] skipped (--no-sort)")
+        sorted_items = [(None, extinf, url) for extinf, url in items]
     else:
-        items = sort_items(items)
+        sorted_items = sort_items(items)
         counts = {}
-        for it in items:
-            zone = sort_key(it, 0)[0]
+        for zone, _e, _u in sorted_items:
             counts[zone] = counts.get(zone, 0) + 1
         print("[sort] 央视 %d / 省级卫视 %d / 其它国内 %d / 港澳台 %d / 境外 %d"
               % (counts.get(0, 0), counts.get(1, 0), counts.get(2, 0),
@@ -341,11 +358,13 @@ def main() -> int:
     lines.append("# merged by scripts/merge.py — do not edit by hand")
     for src in per_source:
         lines.append(f"#   source: {src}")
-    for extinf, url in items:
+    for zone, extinf, url in sorted_items:
+        if zone is not None:
+            extinf = set_group(extinf, GROUP_NAMES[zone])
         lines.append(extinf)
         lines.append(url)
     args.out.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"wrote {args.out} with {len(items)} channels")
+    print(f"wrote {args.out} with {len(sorted_items)} channels")
     return 0
 
 
