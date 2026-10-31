@@ -85,6 +85,28 @@ NAME_ZH = {
     "ABN CHINA": "ABN 中国",
     "ANDO TV": "安多卫视",
     "ANGEL TV CHINESE": "天使卫视",
+    # 省级卫视：英文名译成 EPG 里用的中文名，既是显示名也是 tvg-name，
+    # 这样「我的电视」的节目单能按台名精确匹配上（EPG 站用的就是这些写法）。
+    "HUNAN TV": "湖南卫视",
+    "JIANGSU SATELLITE TV": "江苏卫视",
+    "ZHEJIANG SATELLITE TV": "浙江卫视",
+    "GUANGDONG SATELLITE TV": "广东卫视",
+    "SHANDONG SATELLITE TV": "山东卫视",
+    "SICHUAN SATELLITE TV": "四川卫视",
+    "SHENZHEN SATELLITE TV": "深圳卫视",
+    "NINGXIA SATELLITE CHANNEL": "宁夏卫视",
+    "YANBIAN SATELLITE TV": "延边卫视",
+    "YUNNAN SATELLITE TV": "云南卫视",
+    "TIANJIN TV": "天津卫视",
+    "HEBEI TV": "河北卫视",
+    "LIAONING TV": "辽宁卫视",
+    "HEILONGJIANG TV": "黑龙江卫视",
+    "GUIZHOU TV": "贵州卫视",
+    "JIANGXI TV": "江西卫视",
+    "QINGHAI TV": "青海卫视",
+    "XIZANG TV CHINESE": "西藏卫视",
+    "XINJIANG TV 1": "新疆卫视",
+    "DRAGON TV INTERNATIONAL": "东方卫视",
 }
 
 _MARK = re.compile(r"[\(\[](?:[^\)\]]*)[\)\]]")
@@ -218,6 +240,33 @@ def set_group(extinf: str, group: str) -> str:
     if not sep:
         return extinf
     return f'{head} group-title="{group}",{name}'
+
+
+# 节目单（EPG）是按台名**精确**匹配的（EpgList.lookup: epg.channel.equals(epgName, ignoreCase)），
+# 而播放器的 epgName 取的是 tvg-name 属性，没有就退回整条显示名。
+# 上游的显示名带「(720p)」「[Geo-blocked]」这些尾巴，直接拿去匹配几乎全落空，
+# 所以额外写一个干净的 tvg-name。
+_TVG_NAME = re.compile(r'tvg-name="[^"]*"')
+
+
+def clean_name(extinf: str) -> str:
+    """去掉画质/标记尾巴，得到用来对 EPG 的台名。"""
+    name = _MARK.sub("", channel_name(extinf)).strip()
+    m = _HD.match(name)
+    if m:
+        name = m.group(1).strip()
+    return name.strip()
+
+
+def set_tvg_name(extinf: str, name: str) -> str:
+    if not name:
+        return extinf
+    if _TVG_NAME.search(extinf):
+        return _TVG_NAME.sub(f'tvg-name="{name}"', extinf, count=1)
+    head, sep, _tail = extinf.rpartition(",")
+    if not sep:
+        return extinf
+    return f'{head} tvg-name="{name}",{channel_name(extinf)}'
 
 
 
@@ -361,6 +410,7 @@ def main() -> int:
     for zone, extinf, url in sorted_items:
         if zone is not None:
             extinf = set_group(extinf, GROUP_NAMES[zone])
+            extinf = set_tvg_name(extinf, clean_name(extinf))
         lines.append(extinf)
         lines.append(url)
     args.out.write_text("\n".join(lines) + "\n", encoding="utf-8")
