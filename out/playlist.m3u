@@ -93,7 +93,7 @@ http://112.25.48.68/live/program/live/btws/1300000/mnf.m3u8
 #EXTINF:-1 tvg-id="DragonTVInternational.cn@SD" tvg-logo="https://i.imgur.com/WqM6xnF.png" group-title="省级卫视" tvg-name="东方卫视",东方卫视
 https://restream.pdtvhd.com/memfs/0b1b95c9-3543-4af9-9fdb-cf45f1602f17.m3u8
 #EXTINF:-1 tvg-id="FujianComprehensiveChannel.cn@SD" tvg-logo="https://i.imgur.com/rePTGa6.png" group-title="省级卫视" tvg-name="Fujian Comprehensive Channel",Fujian Comprehensive Channel
-http://120.39.52.202:5140/%E7%A6%8F%E5%BB%BA%E7%BB%BC%E5%90%88
+http://120.39.52.202:5140/福建综合
 #EXTINF:-1 tvg-id="GuangdongSatelliteTV.cn@SD" tvg-logo="https://parco-zh.github.io/demo/guangdong.jpg" group-title="省级卫视" tvg-name="广东卫视",广东卫视
 https://h5cul1yar48um3t.wcetv.com/hls/gdsatellite.m3u8
 #EXTINF:-1 tvg-id="GuizhouTV.cn@SD" tvg-logo="https://i.imgur.com/nkcKCdr.png" group-title="省级卫视" tvg-name="贵州卫视",贵州卫视 (576p)
@@ -132,8 +132,6 @@ https://klmysjtzb.rcsxzx.com/hls/klmy2.m3u8
 http://110.153.180.106:55555/out_3/index.m3u8
 #EXTINF:-1 tvg-id="XinjiangTV3.cn@SD" tvg-logo="https://i.imgur.com/l8S5qQB.png" group-title="省级卫视" tvg-name="Xinjiang TV 3",Xinjiang TV 3
 http://110.153.180.106:55555/out_2/index.m3u8
-#EXTINF:-1 tvg-id="XinjiangTV5.cn@SD" tvg-logo="https://i.imgur.com/PARupWK.png" group-title="省级卫视" tvg-name="Xinjiang TV 5",Xinjiang TV 5
-http://120.70.60.179:9901/tsfile/live/1002_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-id="XinjiangTV8.cn@SD" tvg-logo="https://i.imgur.com/JJw1Ndc.png" group-title="省级卫视" tvg-name="Xinjiang TV 8",Xinjiang TV 8
 http://120.70.60.179:9901/tsfile/live/1002_1.m3u8?authid=0&key=txiptv&playlive=1
 #EXTINF:-1 tvg-id="XizangTVChinese.cn@SD" tvg-logo="https://i.imgur.com/V0v3ST5.png" group-title="省级卫视" tvg-name="西藏卫视",西藏卫视
@@ -187,7 +185,7 @@ http://live2.rxip.sc96655.com/live/zxs_4000.m3u8?A=&E=&K=&P=&S=&U=
 #EXTINF:-1 tvg-id="DocumentaryHumanitiesChannel.cn@SD" tvg-logo="https://i.imgur.com/CEcNWsE.png" group-title="地方频道" tvg-name="Documentary Humanities Channel",Documentary Humanities Channel (1080p)
 http://39.135.138.59:18890/PLTV/88888910/224/3221225655/index.m3u8
 #EXTINF:-1 tvg-id="DongguanComprehensiveNewsChannel.cn@SD" tvg-logo="https://www.tvchinese.net/uploads/tv/dgtv1.jpg" group-title="地方频道" tvg-name="Dongguan Comprehensive News Channel",Dongguan Comprehensive News Channel
-https://stream.sun0769.com/dgrtv1/mp4tv1_800/index.m3u8
+http://stream.sun0769.com/dgrtv1/mp4tv1_1500.flv
 #EXTINF:-1 tvg-id="DunhuangTV.cn@SD" tvg-logo="https://i.imgur.com/RpGKOQd.jpg" group-title="地方频道" tvg-name="Dunhuang TV",Dunhuang TV (1080p)
 http://117.156.28.119/270000001111/1110000028/index.m3u8
 #EXTINF:-1 tvg-id="FengshangShoppingChannel.cn@SD" tvg-logo="https://i.imgur.com/WNhfnUR.png" group-title="地方频道" tvg-name="Fengshang Shopping Channel",Fengshang Shopping Channel (1080p)
@@ -195,7 +193,7 @@ http://183.207.248.71/cntv/live1/fengshanggw/fengshanggw
 #EXTINF:-1 tvg-id="GoldenEagleCartoon.cn@SD" tvg-logo="https://i.imgur.com/xfVHrKQ.png" group-title="地方频道" tvg-name="Golden Eagle Cartoon",Golden Eagle Cartoon (576p)
 http://223.110.245.145/ott.js.chinamobile.com/PLTV/3/224/3221226303/index.m3u8
 #EXTINF:-1 tvg-id="GuangxiVarietyTravelChannel.cn@SD" tvg-logo="https://www.tvchinese.net/uploads/tv/gxzypd.jpg" group-title="地方频道" tvg-name="Guangxi Variety & Travel Channel",Guangxi Variety & Travel Channel
-http://111.59.24.227:8181/tsfile/live/1001_1.m3u8?key=txiptv&playlive=1&authid=0
+http://111.59.24.227:8181/tsfile/live/1001_1.m3u8?authid=0&key=txiptv&playlive=1
 #EXTINF:-1 tvg-id="GuangzhouTV.cn@SD" tvg-logo="https://i.imgur.com/ff3KQXp.png" group-title="地方频道" tvg-name="Guangzhou TV",Guangzhou TV
 https://tencentplaybusiness.gztv.com/live/zonghes.m3u8
 #EXTINF:-1 tvg-id="HarbinComprehensiveNewsChannel.cn@SD" tvg-logo="https://www.tvchinese.net/uploads/tv/haerbin.jpg" group-title="地方频道" tvg-name="Harbin Comprehensive News Channel",Harbin Comprehensive News Channel
@@ -267,17 +265,17 @@ http://www.pxitv.com:8099/hls-live/livepkgr/_definst_/pxitvevent/pxtv1stream.m3u
 #EXTINF:-1 tvg-id="QianjiangChannel.cn@SD" tvg-logo="https://i.imgur.com/QWfoGbM.png" group-title="地方频道" tvg-name="Qianjiang Channel",Qianjiang Channel
 rtmp://splay-qukan.cztv.com/live/1792059352668052?auth_key=1886667371-a351173879224e5fbbb4412bf9f96eff-0-de13c2186941a507a27a3438213d2169
 #EXTINF:-1 tvg-id="QTV1.cn@SD" tvg-logo="https://www.tvchinese.net/uploads/tv/qdtv1.jpg" group-title="地方频道" tvg-name="QTV-1",QTV-1
-http://video10.qtv.com.cn/drm/qtv1at/manifest.m3u8
+http://119.166.53.110:85/tsfile/live/1000_1.m3u8?authid=0&key=txiptv&playlive=1
 #EXTINF:-1 tvg-id="QTV2.cn@SD" tvg-logo="https://www.tvchinese.net/uploads/tv/qdtv2.jpg" group-title="地方频道" tvg-name="QTV-2",QTV-2
 http://video10.qtv.com.cn/drm/qtv2at/manifest.m3u8
 #EXTINF:-1 tvg-id="QTV3.cn@SD" tvg-logo="https://www.tvchinese.net/uploads/tv/qdtv3.jpg" group-title="地方频道" tvg-name="QTV-3",QTV-3
-http://video10.qtv.com.cn/drm/qtv3at/manifest.m3u8
+http://119.166.53.110:85/tsfile/live/1002_1.m3u8?authid=0&key=txiptv&playlive=1
 #EXTINF:-1 tvg-id="QTV4.cn@SD" tvg-logo="https://www.tvchinese.net/uploads/tv/qdtv4.jpg" group-title="地方频道" tvg-name="QTV-4",QTV-4
-http://video10.qtv.com.cn/drm/qtv4at/manifest.m3u8
+http://119.166.53.110:85/tsfile/live/1004_1.m3u8?authid=0&key=txiptv&playlive=1
 #EXTINF:-1 tvg-id="QTV5.cn@SD" tvg-logo="https://www.tvchinese.net/uploads/tv/qdtv5.jpg" group-title="地方频道" tvg-name="QTV-5",QTV-5
 http://video10.qtv.com.cn/drm/qtv5at/manifest.m3u8
 #EXTINF:-1 tvg-id="QTV6.cn@SD" tvg-logo="https://www.tvchinese.net/uploads/tv/qdtv6.jpg" group-title="地方频道" tvg-name="QTV-6",QTV-6
-http://video10.qtv.com.cn/drm/qtv6at/manifest.m3u8
+http://119.166.53.110:85/tsfile/live/0002_1.m3u8?authid=0&key=txiptv&playlive=1
 #EXTINF:-1 tvg-id="ShandongTVAgriculturalScienceChannel.cn@SD" tvg-logo="https://i.imgur.com/EY2zH06.png" group-title="地方频道" tvg-name="Shandong TV Agricultural Science Channel",Shandong TV Agricultural Science Channel (406p) [Geo-blocked]
 http://livealone302.iqilu.com/iqilu/nkpd.m3u8
 #EXTINF:-1 tvg-id="ShandongTVChildrensChannel.cn@SD" tvg-logo="https://i.imgur.com/ph7YKNa.png" group-title="地方频道" tvg-name="Shandong TV Children's Channel",Shandong TV Children's Channel (406p) [Geo-blocked]
@@ -318,7 +316,7 @@ https://ali-m-l.cztv.com/channels/lantian/channel10/1080p.m3u8
 https://fastlive.cctvplus.com/out/v1/ca6f9297b7314a63959435028af287fc/index.m3u8
 #EXTINF:-1 tvg-id="DiscoveringChina.cn@SD" tvg-logo="https://i.imgur.com/wr2bLaA.png" group-title="地方频道" tvg-name="Discovering China",Discovering China (1080p)
 https://fastlive.cctvplus.com/out/v1/8442c3bfd4c64a3984389328f6087879/index.m3u8
-#EXTINF:-1 tvg-id="BeautifulLifeTV.tw@SD" tvg-logo="https://i.imgur.com/hkwcBM9.png" group-title="港澳台" tvg-name="Beautiful Life TV",Beautiful Life TV
+#EXTINF:-1 tvg-id="BeautifulLifeTV.tw@SD" tvg-logo="https://i.imgur.com/hkwcBM9.png" group-title="港澳台" tvg-name="Beautiful Life TV",Beautiful Life TV (720p)
 https://5ddce30eb4b55.streamlock.net/bltvhd/bltv1/playlist.m3u8
 #EXTINF:-1 tvg-id="BSTV.hk@SD" tvg-logo="https://i.imgur.com/GVYSSgm.png" group-title="港澳台" tvg-name="BSTV",BSTV (Hong Kong) (576p)
 http://202.69.67.66:443/webcast/bshdlive-pc/playlist.m3u8
@@ -365,7 +363,7 @@ https://freem3u.xyz/api/live/play.m3u8?vid=9901
 #EXTINF:-1 tvg-id="LotusTV.mo@SD" tvg-logo="https://i.imgur.com/7j8Lnog.png" http-user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" group-title="港澳台" tvg-name="Lotus TV",Lotus TV (720p)
 https://cdn4.skygo.mn/live/disk1/Lotus/HLSv3-FTA/Lotus.m3u8
 #EXTINF:-1 tvg-id="MeiAhMovieChannel.hk@SD" tvg-logo="https://i.imgur.com/laGiFM1.png" group-title="港澳台" tvg-name="Mei Ah Movie Channel",Mei Ah Movie Channel (1080p)
-http://103.172.187.30:12000/stream/mytv/null-9/master.m3u8
+http://103.172.187.30:12000/stream/mytv/null-2/master.m3u8
 #EXTINF:-1 tvg-id="MOMOTV.tw@SD" tvg-logo="https://m.momoshop.com.tw/img/message.png" group-title="港澳台" tvg-name="MOMO TV",MOMO TV (1080p)
 http://nmk.ioapk.com:5050/4gtv-live107/index.m3u8
 #EXTINF:-1 tvg-id="PhoenixChineseChannel.hk@SD" tvg-logo="https://raw.githubusercontent.com/wanglindl/TVlogo/main/img/Phoenix1.png" group-title="港澳台" tvg-name="Phoenix Chinese Channel",Phoenix Chinese Channel (720p)
@@ -420,7 +418,7 @@ https://homeplushls.wns.live/hls/stream.m3u8
 http://cdn6.163189.xyz/163189/8tv
 #EXTINF:-1 tvg-id="BabyFirst.us@US" tvg-logo="https://i.imgur.com/WxLHBwu.png" group-title="境外频道" tvg-name="BabyFirst",BabyFirst (720p)
 https://cdn.fast.jwp.services/v1/channel/1_jB6940Ei_TvhvIHDL/manifest.m3u8
-#EXTINF:-1 tvg-id="BeritaRTM.my@SD" tvg-logo="https://i.imgur.com/1Xzxsgl.png" http-referrer="https://rtm-player.glueapi.io/" group-title="境外频道" tvg-name="Berita RTM",Berita RTM [Geo-blocked]
+#EXTINF:-1 tvg-id="BeritaRTM.my@SD" tvg-logo="https://i.imgur.com/1Xzxsgl.png" http-referrer="https://rtm-player.glueapi.io/" group-title="境外频道" tvg-name="Berita RTM",Berita RTM (1080p) [Geo-blocked]
 https://d25tgymtnqzu8s.cloudfront.net/smil:berita/playlist.m3u8?id=5
 #EXTINF:-1 tvg-id="Channel8.sg@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Mediacorp_Channel_8_2023.svg/960px-Mediacorp_Channel_8_2023.svg.png" group-title="境外频道" tvg-name="Channel 8",Channel 8 (Singapore) (720p)
 https://cdn.qd.je/163189/ch8
@@ -458,7 +456,7 @@ https://live.ntdtv.com/mllive860/playlist.m3u8
 https://live.ntdtv.com/cwlive220/playlist.m3u8
 #EXTINF:-1 tvg-id="NTDTVChina.us@SD" tvg-logo="https://i.imgur.com/OpWTWdh.png" group-title="境外频道" tvg-name="NTD TV China",NTD TV China
 https://live.ntdtv.com/cnlive900/playlist.m3u8
-#EXTINF:-1 tvg-id="Okey.my@SD" tvg-logo="https://i.imgur.com/V2jREQ5.png" http-referrer="https://rtm-player.glueapi.io/" group-title="境外频道" tvg-name="Okey",Okey [Geo-blocked]
+#EXTINF:-1 tvg-id="Okey.my@SD" tvg-logo="https://i.imgur.com/V2jREQ5.png" http-referrer="https://rtm-player.glueapi.io/" group-title="境外频道" tvg-name="Okey",Okey (1080p) [Geo-blocked]
 https://d25tgymtnqzu8s.cloudfront.net/smil:okey/playlist.m3u8?id=3
 #EXTINF:-1 tvg-id="PeaceTVChinese.ae@SD" tvg-logo="https://github.com/fawazahmed0/tiger/raw/master/peace/chinese.jpg" group-title="境外频道" tvg-name="Peace TV Chinese",Peace TV Chinese (1080p)
 https://dzkyvlfyge.erbvr.com/PeaceTvChinese/index.m3u8
